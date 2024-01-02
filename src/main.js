@@ -1,4 +1,4 @@
-function add(a,b){ return a + b; }
+
 
 const posnFactory = (x, y) => {
     return{
