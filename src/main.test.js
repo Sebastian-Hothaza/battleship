@@ -1,5 +1,22 @@
-const sample = require('./main')
+const main = require('./main')
 
-test('sample test', () => {
-    expect(sample.add(1,2)).toBe(3);
+describe('Posn testing', () => {
+  test('create a posn', () =>{
+    const myPosn = main.posnFactory(4,5);
+    expect(myPosn.x).toBe(4);
+    expect(myPosn.y).toBe(5);
   });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+

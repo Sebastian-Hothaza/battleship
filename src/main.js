@@ -1,9 +1,16 @@
-console.log("Hello from JS!")
+function add(a,b){ return a + b; }
 
-
-function add(a,b){
-    return a + b ;
+const posnFactory = (x, y) => {
+    return{
+        get x(){return x;}, set x(newX){x=newX},
+        get y(){return y;}, set y(newY){y=newY}
+    }
 }
 
 
-module.exports = { add }
+
+
+
+module.exports = { posnFactory }
+
+
