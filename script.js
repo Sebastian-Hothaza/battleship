@@ -15,7 +15,7 @@
   \*********************/
 /***/ ((module) => {
 
-eval("function add(a,b){ return a + b; }\n\nconst posnFactory = (x, y) => {\n    return{\n        get x(){return x;}, set x(newX){x=newX},\n        get y(){return y;}, set y(newY){y=newY}\n    }\n}\n\n\n\n\n\nmodule.exports = { posnFactory }\n\n\n\n\n//# sourceURL=webpack://battleship/./src/main.js?");
+eval("\n\nconst posnFactory = (x, y) => {\n    return{\n        get x(){return x;}, set x(newX){x=newX},\n        get y(){return y;}, set y(newY){y=newY}\n    }\n}\n\n\n\n\n\nmodule.exports = { posnFactory }\n\n\n\n\n//# sourceURL=webpack://battleship/./src/main.js?");
 
 /***/ })
 
