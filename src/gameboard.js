@@ -2,8 +2,8 @@
 
 // Gameboards should keep track of missed attacks so they can display them properly.
 
-const ship = require('./ship')
-const main = require('./main')
+const ship = require('./ship.js')
+const main = require('./main.js')
 
 //NOTE: Origin being taken as bottom left corner
 const GAMEBOARD_MAX_X = 9;
@@ -41,7 +41,7 @@ const gameboardFactory = () => {
                 return false;
         }
 
-        // Checking that ship placement does not overlap with other ships
+        // Checking that ship playerplacement does not overlap with other ships
         const spacesOccupied = getShipSpaces(posn, dir, size);
         // Check that none of these spaces occupied coincide with any of spaces occupied by current ships
         
@@ -116,7 +116,7 @@ const gameboardFactory = () => {
         return result;
     }
 
-    //determines whether attack hit a ship, then sends the ‘hit’ function to the correct ship, or records the coordinates of the missed shot
+    //determines whether attack hit a ship, then sends the ‘hit’ function to the correct ship, or records the coordinates of the missed shot for the gameboard
     function receiveAttack(target){
         for (let i=0; i<ships.length; i++){
             for (let j=0; j<ships[i][1].length; j++){
@@ -143,4 +143,4 @@ const gameboardFactory = () => {
 }
 
 
-module.exports = { gameboardFactory }
+module.exports = { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y, gameboardFactory }

@@ -1,4 +1,6 @@
-
+const player = require('./player.js')
+const ship = require('./ship.js')
+const gameboard = require('./gameboard.js')
 
 const posnFactory = (x, y) => {
     return{
@@ -7,8 +9,16 @@ const posnFactory = (x, y) => {
     }
 }
 
+// Creating the gameboards and players
+const person = player.playerFactory();
+const computer = player.playerFactory();
 
+const personGB = gameboard.gameboardFactory();
+const computerGB = gameboard.gameboardFactory();
 
+// // Placing a computer ship at the origin
+const origin = posnFactory(0,0);
+computerGB.placeShip(origin,'R',5);
 
 
 module.exports = { posnFactory }

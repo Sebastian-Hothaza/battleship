@@ -1,5 +1,5 @@
-const gameboard = require('./gameboard')
-const main = require('./main')
+const gameboard = require('./gameboard.js')
+const main = require('./main.js')
 
 describe('Ship testing', () => {
 
