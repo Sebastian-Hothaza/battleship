@@ -1,4 +1,4 @@
-
+export { shipFactory }
 
 const shipFactory = (size) => {
     let timesHit = 0;
@@ -16,5 +16,3 @@ const shipFactory = (size) => {
     }
 }
 
-
-module.exports = { shipFactory }

@@ -1,9 +1,9 @@
-
-
 // Gameboards should keep track of missed attacks so they can display them properly.
 
-const ship = require('./ship.js')
-const posn = require('./posn.js')
+import { shipFactory } from './ship.js'
+import { posnFactory } from './posn.js'
+export { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y, gameboardFactory }
+
 
 //NOTE: Origin being taken as bottom left corner
 const GAMEBOARD_MAX_X = 9;
@@ -56,7 +56,7 @@ const gameboardFactory = () => {
 
     
         // Creating and placing the ship
-        ships.push( [ship.shipFactory(size), spacesOccupied] ); 
+        ships.push( [shipFactory(size), spacesOccupied] ); 
        
         
       
@@ -70,22 +70,22 @@ const gameboardFactory = () => {
         switch(dir){
             case 'L':
                 for (let i=1; i<size; i++){
-                    result.push(posn.posnFactory(head.x-i,head.y))
+                    result.push(posnFactory(head.x-i,head.y))
                 }
                 break;
             case 'R':
                 for (let i=1; i<size; i++){
-                    result.push(posn.posnFactory(head.x+i,head.y))
+                    result.push(posnFactory(head.x+i,head.y))
                 }
                 break;
             case 'U':
                 for (let i=1; i<size; i++){
-                    result.push(posn.posnFactory(head.x,head.y+i))
+                    result.push(posnFactory(head.x,head.y+i))
                 }
                 break;
             case 'D':
                 for (let i=1; i<size; i++){
-                    result.push(posn.posnFactory(head.x,head.y-i))
+                    result.push(posnFactory(head.x,head.y-i))
                 }
                 break;
             default:
@@ -142,5 +142,3 @@ const gameboardFactory = () => {
     }
 }
 
-
-module.exports = { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y, gameboardFactory }

@@ -1,5 +1,8 @@
-const gameboard = require('./gameboard.js')
-const posn = require('./posn.js')
+
+// const posn = require('./posn.js')
+import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from "./gameboard.js"
+import { posnFactory } from "./posn.js"
+export { playerFactory }
 
 const playerFactory = () => {
     let shots = []
@@ -7,8 +10,8 @@ const playerFactory = () => {
     // Randomly returns a valid posn to shoot at
     function getRandomTarget(){
         while (1){
-            let candidatePosn = posn.posnFactory( Math.floor(Math.random() * (gameboard.GAMEBOARD_MAX_X+1)),
-                                                Math.floor(Math.random() * (gameboard.GAMEBOARD_MAX_X+1)));
+            let candidatePosn = posnFactory( Math.floor(Math.random() * (GAMEBOARD_MAX_X+1)),
+                                                Math.floor(Math.random() * (GAMEBOARD_MAX_Y+1)));
             let unique = true; // We assume that the generated candidate is unique     
 
             // Verify that the candidate posn is unique
@@ -30,5 +33,3 @@ const playerFactory = () => {
         shots, getRandomTarget
     }
 }
-
-module.exports = { playerFactory }

@@ -1,19 +1,19 @@
-const player = require('./player.js')
-const ship = require('./ship.js')
-const gameboard = require('./gameboard.js')
-const posn = require('./posn.js')
-
+// const player = require('./player.js')
+// const gameboard = require('./gameboard.js')
+// const posn = require('./posn.js')
+import { playerFactory } from './player.js';
+import { gameboardFactory } from './gameboard.js';
+import { posnFactory } from './posn.js';
 
 // Creating the gameboards and players
-const person = player.playerFactory();
-const computer = player.playerFactory();
+const person = playerFactory();
+const computer = playerFactory();
 
-const personGB = gameboard.gameboardFactory();
-const computerGB = gameboard.gameboardFactory();
+const personGB = gameboardFactory();
+const computerGB = gameboardFactory();
 
-// // Placing a computer ship at the origin
-const origin = posn.posnFactory(0,0);
-computerGB.placeShip(origin,'R',5);
+// Placing a computer ship at the origin
+computerGB.placeShip(posnFactory(0,0),'R',5);
 
 
 
