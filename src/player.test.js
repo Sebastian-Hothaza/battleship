@@ -1,5 +1,5 @@
 const player = require('./player.js')
-const main = require('./main.js')
+const posn = require('./posn.js')
 
 
 describe('Player testing', () => {
@@ -10,9 +10,9 @@ describe('Player testing', () => {
 
     test('Taking 3 shots', () => {
         const myPlayer = player.playerFactory();
-        myPlayer.shots.push(main.posnFactory(1,2));
-        myPlayer.shots.push(main.posnFactory(1,3));
-        myPlayer.shots.push(main.posnFactory(1,4));
+        myPlayer.shots.push(posn.posnFactory(1,2));
+        myPlayer.shots.push(posn.posnFactory(1,3));
+        myPlayer.shots.push(posn.posnFactory(1,4));
         expect(myPlayer.shots.length).toBe(3);
       });
 

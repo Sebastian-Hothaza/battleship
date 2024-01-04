@@ -3,7 +3,7 @@
 // Gameboards should keep track of missed attacks so they can display them properly.
 
 const ship = require('./ship.js')
-const main = require('./main.js')
+const posn = require('./posn.js')
 
 //NOTE: Origin being taken as bottom left corner
 const GAMEBOARD_MAX_X = 9;
@@ -70,22 +70,22 @@ const gameboardFactory = () => {
         switch(dir){
             case 'L':
                 for (let i=1; i<size; i++){
-                    result.push(main.posnFactory(head.x-i,head.y))
+                    result.push(posn.posnFactory(head.x-i,head.y))
                 }
                 break;
             case 'R':
                 for (let i=1; i<size; i++){
-                    result.push(main.posnFactory(head.x+i,head.y))
+                    result.push(posn.posnFactory(head.x+i,head.y))
                 }
                 break;
             case 'U':
                 for (let i=1; i<size; i++){
-                    result.push(main.posnFactory(head.x,head.y+i))
+                    result.push(posn.posnFactory(head.x,head.y+i))
                 }
                 break;
             case 'D':
                 for (let i=1; i<size; i++){
-                    result.push(main.posnFactory(head.x,head.y-i))
+                    result.push(posn.posnFactory(head.x,head.y-i))
                 }
                 break;
             default:

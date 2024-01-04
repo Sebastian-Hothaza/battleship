@@ -1,5 +1,5 @@
 const gameboard = require('./gameboard.js')
-const main = require('./main.js')
+const posn = require('./posn.js')
 
 describe('Ship testing', () => {
 
@@ -8,24 +8,24 @@ describe('Ship testing', () => {
     });
 
     test('placing a valid ship', () => {
-        const origin = main.posnFactory(0,0);
+        const origin = posn.posnFactory(0,0);
         const myBoard = gameboard.gameboardFactory();
         expect(myBoard.placeShip(origin,'R', 5)).toBe(true);
     });
 
     test('placing ship with origin outside valid gameboard', () => {
-        const badOriginMIN = main.posnFactory(-1,-1);
-        const badOriginMAX = main.posnFactory(11,11);
+        const badOriginMIN = posn.posnFactory(-1,-1);
+        const badOriginMAX = posn.posnFactory(11,11);
         const myBoard = gameboard.gameboardFactory();
         expect(myBoard.placeShip(badOriginMIN,'R', 5)).toBe(false);
         expect(myBoard.placeShip(badOriginMAX,'R', 5)).toBe(false);
     });
 
     test('placing ship which would spill outside valid gameboard', () => {
-        const bottomLeft = main.posnFactory(1,1);
-        const bottomRight = main.posnFactory(8,1);
-        const topLeft = main.posnFactory(1,8);
-        const topRight = main.posnFactory(8,8);
+        const bottomLeft = posn.posnFactory(1,1);
+        const bottomRight = posn.posnFactory(8,1);
+        const topLeft = posn.posnFactory(1,8);
+        const topRight = posn.posnFactory(8,8);
         const myBoard = gameboard.gameboardFactory();
 
 
@@ -44,9 +44,9 @@ describe('Ship testing', () => {
 
     
     test('placing a ship which would overlap another ship', () => {
-        const origin = main.posnFactory(0,0);
-        const overlapHead = main.posnFactory(1,0);
-        const farHead = main.posnFactory(7,0);
+        const origin = posn.posnFactory(0,0);
+        const overlapHead = posn.posnFactory(1,0);
+        const farHead = posn.posnFactory(7,0);
         const myBoard = gameboard.gameboardFactory();
         expect(myBoard.placeShip(origin,'R', 5)).toBe(true);
         expect(myBoard.placeShip(overlapHead,'R', 5)).toBe(false);
@@ -56,10 +56,10 @@ describe('Ship testing', () => {
     test('Receive an attack', () => {
   
         const myBoard = gameboard.gameboardFactory();
-        myBoard.placeShip(main.posnFactory(0,0),'R', 5);
-        myBoard.receiveAttack(main.posnFactory(0,0));
-        myBoard.receiveAttack(main.posnFactory(4,0));
-        myBoard.receiveAttack(main.posnFactory(5,0));
+        myBoard.placeShip(posn.posnFactory(0,0),'R', 5);
+        myBoard.receiveAttack(posn.posnFactory(0,0));
+        myBoard.receiveAttack(posn.posnFactory(4,0));
+        myBoard.receiveAttack(posn.posnFactory(5,0));
 
         expect(myBoard.missed.length).toBe(1);
     });
@@ -67,10 +67,10 @@ describe('Ship testing', () => {
     test('Sink all ships', () => {
   
         const myBoard = gameboard.gameboardFactory();
-        myBoard.placeShip(main.posnFactory(0,0),'R', 2);
-        myBoard.receiveAttack(main.posnFactory(0,0));
+        myBoard.placeShip(posn.posnFactory(0,0),'R', 2);
+        myBoard.receiveAttack(posn.posnFactory(0,0));
         expect(myBoard.allSunk()).toBe(false);
-        myBoard.receiveAttack(main.posnFactory(1,0));
+        myBoard.receiveAttack(posn.posnFactory(1,0));
         expect(myBoard.allSunk()).toBe(true);
     });
   
