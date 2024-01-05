@@ -117,16 +117,18 @@ const gameboardFactory = () => {
     }
 
     //determines whether attack hit a ship, then sends the ‘hit’ function to the correct ship, or records the coordinates of the missed shot for the gameboard
+    //return the ship if the attack hit, else returns false
     function receiveAttack(target){
         for (let i=0; i<ships.length; i++){
             for (let j=0; j<ships[i][1].length; j++){
                 if (ships[i][1][j].x === target.x && ships[i][1][j].y === target.y){
                     ships[i][0].hit();
-                    return;
+                    return ships[i][0];
                 }
             }
         }
         missed.push(target)
+        return false;
     }
 
     // Returns true if all ships on board are sunk
