@@ -4,6 +4,9 @@
 import { playerFactory } from './player.js';
 import { gameboardFactory } from './gameboard.js';
 import { posnFactory } from './posn.js';
+import { loadSite, drawPersonShip, updateBoards } from './page.js';
+
+export { personGB, computerGB}
 
 // Creating the gameboards and players
 const person = playerFactory();
@@ -12,23 +15,25 @@ const computer = playerFactory();
 const personGB = gameboardFactory();
 const computerGB = gameboardFactory();
 
-
-
-
+loadSite();
 loadBoards();
 
-if (runGame() === person){
-    console.log('You win!')
-} else {
-    console.log('You lose')
-}
+// if (runGame() === person){
+//     console.log('You win!')
+// } else {
+//     console.log('You lose')
+// }
 
 function loadBoards(){
     // Placing the computer ships
     computerGB.placeShip(posnFactory(0,0),'R',5);
+    // placeComputerShips(sizes) // Randomly places computer ships. Sizes is array of ship sizes
 
     // Placing the player ships
     personGB.placeShip(posnFactory(1,1), 'R', 5);
+    
+
+    drawPersonShip(); // Draws the persons ships
 }
 
 // Begin game loop (runs until either gameboard reports all ships sunk; in that case other player wins)
@@ -41,7 +46,7 @@ function runGame(){
 
 
 
-    while (personGB.allSunk() !== true && computerGB.allSunk() !== true){
+    while (personGB.allSunk() === false && computerGB.allSunk() === false){
         // setup
         if (personTurn){
             GB = computerGB;
@@ -68,6 +73,7 @@ function runGame(){
             console.log("SPLASH");
         }
         personTurn = !personTurn  // Switch players
+        updateBoards();
     }
 }
 

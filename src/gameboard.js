@@ -15,6 +15,7 @@ const gameboardFactory = () => {
     // Gameboard needs to know which ship occupies which spots
     let ships = []; // Tracks ships placed on the board. 
     let missed = []; // Array of missed shots
+    let hits = []; // Array of hit shots
 
     
     // Given a posn and direction, attempts to place a ship of specified size. Returns true if placement is valid, false otherwise
@@ -95,7 +96,7 @@ const gameboardFactory = () => {
         return result;
     }
 
-    // Prints all ships and their locations to console
+    // Prints all ships and their locations to console - Dev use
     function printShips(){
         for (let i=0; i<ships.length; i++){
             console.log("Ship ",i+1," has size ",ships[i][0].size)
@@ -116,6 +117,17 @@ const gameboardFactory = () => {
         return result;
     }
 
+    // Returns an array of posns corresponding to spaces occupied by ships
+    function getOccupiedSpaces(){
+        let result = [];
+        for (let i=0; i<ships.length; i++){
+            for (let j=0; j<ships[i][1].length; j++){
+                result.push(ships[i][1][j]);
+            }
+        }
+        return result;
+    }
+
     //determines whether attack hit a ship, then sends the ‘hit’ function to the correct ship, or records the coordinates of the missed shot for the gameboard
     //return the ship if the attack hit, else returns false
     function receiveAttack(target){
@@ -123,6 +135,7 @@ const gameboardFactory = () => {
             for (let j=0; j<ships[i][1].length; j++){
                 if (ships[i][1][j].x === target.x && ships[i][1][j].y === target.y){
                     ships[i][0].hit();
+                    hits.push(target);
                     return ships[i][0];
                 }
             }
@@ -140,7 +153,7 @@ const gameboardFactory = () => {
     }
 
     return{
-        placeShip, receiveAttack, getShips, allSunk, missed
+        placeShip, receiveAttack, getShips, allSunk, getOccupiedSpaces, missed, hits
     }
 }
 
