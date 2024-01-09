@@ -15,4 +15,3 @@ const shipFactory = (size) => {
         get size(){return size;}, set size(newSize){size=newSize}, hit, isSunk
     }
 }
-

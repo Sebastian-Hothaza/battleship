@@ -5,38 +5,46 @@ import { posnFactory } from './posn.js';
 describe('Player testing', () => {
 
     test('Creating a player', () => {
-      expect(playerFactory().shots.length).toBe(0);
+      expect(playerFactory().board.hits.length).toBe(0);
+      expect(playerFactory().board.missed.length).toBe(0);
     });
 
     test('Taking 3 shots', () => {
         const myPlayer = playerFactory();
-        myPlayer.shots.push(posnFactory(1,2));
-        myPlayer.shots.push(posnFactory(1,3));
-        myPlayer.shots.push(posnFactory(1,4));
-        expect(myPlayer.shots.length).toBe(3);
+        myPlayer.board.receiveAttack(posnFactory(1,2));
+        myPlayer.board.receiveAttack(posnFactory(1,3));
+        myPlayer.board.receiveAttack(posnFactory(1,4));
+        expect(myPlayer.board.missed.length).toBe(3);
       });
 
+
     test('Take a random shot', () => {
-        const myPlayer = playerFactory();
-        let targetPosn = myPlayer.getRandomTarget();
-        expect(myPlayer.shots.length).toBe(1);
-        //check return type is posn?
+        const attacker = playerFactory();
+        const victim = playerFactory();
+        let targetPosn = attacker.getRandomTarget(victim.board);
+        victim.board.receiveAttack(targetPosn);
+        expect(victim.board.missed.length).toBe(1);
     });
 
     test('Shoot 10 random shots', () => {
-        const myPlayer = playerFactory();
+        const attacker = playerFactory();
+        const victim = playerFactory();
         for (let i=0; i<10; i++){
-            myPlayer.getRandomTarget();
+            let targetPosn = attacker.getRandomTarget(victim.board);
+            victim.board.receiveAttack(targetPosn);
         }
-        expect(myPlayer.shots.length).toBe(10);
+        expect(victim.board.missed.length).toBe(10);
     });
 
     test('Shoot all spots on grid (assumes 10x10)', () => {
-        const myPlayer = playerFactory();
+        const attacker = playerFactory();
+        const victim = playerFactory();
         for (let i=0; i<100; i++){
-            myPlayer.getRandomTarget();
+            let targetPosn = attacker.getRandomTarget(victim.board);
+            victim.board.receiveAttack(targetPosn);
         }
-        expect(myPlayer.shots.length).toBe(100);
+        const allShots = victim.board.missed.concat(victim.board.hits);
+        expect(allShots.length).toBe(100);
     });
   
   

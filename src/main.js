@@ -1,82 +1,75 @@
-// const player = require('./player.js')
-// const gameboard = require('./gameboard.js')
-// const posn = require('./posn.js')
 import { playerFactory } from './player.js';
-import { gameboardFactory } from './gameboard.js';
 import { posnFactory } from './posn.js';
-import { loadSite, drawPersonShip, updateBoards } from './page.js';
+import { loadSite, drawPersonShip, updateBoards, markCell } from './page.js';
 
-export { personGB, computerGB}
+export { person, computer, play }
 
-// Creating the gameboards and players
+// Creating the players
 const person = playerFactory();
 const computer = playerFactory();
-
-const personGB = gameboardFactory();
-const computerGB = gameboardFactory();
-
 loadSite();
 loadBoards();
 
-// if (runGame() === person){
-//     console.log('You win!')
-// } else {
-//     console.log('You lose')
-// }
-
+// Loads the ships onto the boards 
 function loadBoards(){
     // Placing the computer ships
-    computerGB.placeShip(posnFactory(0,0),'R',5);
+    computer.board.placeShip(posnFactory(0,0),'R',5);
     // placeComputerShips(sizes) // Randomly places computer ships. Sizes is array of ship sizes
 
     // Placing the player ships
-    personGB.placeShip(posnFactory(1,1), 'R', 5);
+    person.board.placeShip(posnFactory(1,1), 'R', 8);
+
+    person.board.placeShip(posnFactory(1,3), 'R', 8);
+
+    person.board.placeShip(posnFactory(1,5), 'R', 8);
     
 
     drawPersonShip(); // Draws the persons ships
 }
 
-// Begin game loop (runs until either gameboard reports all ships sunk; in that case other player wins)
-// Returns winner
-function runGame(){
-    console.log("BEGIN GAME LOOP, person goes first")
-    let personTurn = true;
-    let GB; //Represent the GB the attack occurs on
-    let target;
+// Called by click-listener when person clicks hostile cell
+// Verifies move is valid and calls processAttack
+function play(move){
+    // Verify making a move is permitted
+    // TODO: Game allows a move even after game over event or before ships are setup
+    if (0) return;
+    
+    // Verify target hasn't been shot at before
+    // TODO: Game allows clicking any spot
+    if (0) return;
+    
+    
+
+    // Process the plays
+    processAttack(computer.board, posnFactory(move%10, 9 - parseInt(move/10)));
+
+    // TODO: Add wait timer?
+    processAttack(person.board, computer.getRandomTarget(person.board)); //TODO: Add AI inteligence
+
+    
 
 
+    // Check if someone won
+    // TODO: Game is in infinite loop
 
-    while (personGB.allSunk() === false && computerGB.allSunk() === false){
-        // setup
-        if (personTurn){
-            GB = computerGB;
-            //ISSUE: User should not be able to attack same spot. Enforce in DOM
-            let xy = prompt("enter xy to attack"); 
-            target = posnFactory(parseInt(xy/10), xy%10);
-        } else {
-            GB = personGB;
-            target = computer.getRandomTarget();
-        }
+}
 
-        // Processing the move
-        console.log("Attack (", target.x, ',',target.y,')');
+// Processes an attack and updates the DOM. Must be a legal move.
+// Called by play
+function processAttack(GB, target){
+    // console.log("Attack (", target.x, ',',target.y,')');
         let shipHit = GB.receiveAttack(target)
         
         if (shipHit) {
-            console.log("BOOM");
+            // console.log("BOOM");
+            markCell(GB,'hit', (((9-target.y)*10) + target.x));
             if (shipHit.isSunk()){
-                console.log("ship sunk")
-                if (GB.allSunk() && personTurn) return person; 
-                if (GB.allSunk()) return computer; 
+                console.log("ship sunk")               
             }
         } else {
-            console.log("SPLASH");
+            // console.log("SPLASH");
+            markCell(GB,'miss', (((9-target.y)*10) + target.x));
+
         }
-        personTurn = !personTurn  // Switch players
-        updateBoards();
-    }
+        //updateBoards(); // DOM
 }
-
-
-
-
