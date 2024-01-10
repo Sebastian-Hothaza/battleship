@@ -1,11 +1,11 @@
-import {  GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from "./gameboard";
-import { person, computer, play } from "./main"
+import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y, person, computer, play } from "./main"
 
-export {loadSite, drawPersonShip, markCell}
+export {loadSite, drawPersonShip, drawComputerShip, markCell, updateBoards}
 
 
 function loadSite(){
     const content = document.querySelector('#content');
+
     content.appendChild(createHeader());
 
     const opponentLabel = document.createElement('div');
@@ -35,6 +35,8 @@ function loadSite(){
     const personGrid = createGrid();
     personGrid.id = 'personGrid';
     content.appendChild(personGrid);
+
+    content.appendChild(createFooter());
 }
 
 // Returns div corresponding to header
@@ -103,10 +105,24 @@ function markCell(GB, type, idx){
     cells[idx].classList.add(type);
 }
 
+function updateBoards(){
+    // console.log("UPDATE BOARDS")
+}
+
 function drawPersonShip(){
     const cells = document.getElementById('personGrid').childNodes; 
     // ships is array which keeps track of all ship objects on the board. For each ship we call ships[i][1] which returns array of spaces occupied by that ship
     const spacesOccupied = person.board.getOccupiedSpaces(); // array of posns
+    for (let i=0; i<spacesOccupied.length; i++){
+        cells[(10*(9 - spacesOccupied[i].y) + spacesOccupied[i].x)].classList.add('ship');
+    }
+}
+
+// DEV USE ONLY
+function drawComputerShip(){
+    const cells = document.getElementById('computerGrid').childNodes; 
+    // ships is array which keeps track of all ship objects on the board. For each ship we call ships[i][1] which returns array of spaces occupied by that ship
+    const spacesOccupied = computer.board.getOccupiedSpaces(); // array of posns
     for (let i=0; i<spacesOccupied.length; i++){
         cells[(10*(9 - spacesOccupied[i].y) + spacesOccupied[i].x)].classList.add('ship');
     }

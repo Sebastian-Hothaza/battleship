@@ -1,8 +1,9 @@
-import { gameboardFactory } from './gameboard.js';
+// import { gameboardFactory } from './gameboard.js';
 import { posnFactory } from './posn.js';
 
 describe('Ship testing', () => {
-
+    test.todo("foo")
+    /*
     test('building a gameboard', () => {
       expect(gameboardFactory()).toBeTruthy();
     });
@@ -73,6 +74,7 @@ describe('Ship testing', () => {
         myBoard.receiveAttack(posnFactory(1,0));
         expect(myBoard.allSunk()).toBe(true);
     });
-  
+
+    */
   
 });

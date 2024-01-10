@@ -1,13 +1,12 @@
 // Gameboards should keep track of missed attacks so they can display them properly.
-
+// TODO: Can we simply to onyl track horizontal/vertical rather than heading?
+import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from './main.js';
 import { shipFactory } from './ship.js'
 import { posnFactory } from './posn.js'
-export { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y, gameboardFactory }
+export { gameboardFactory }
 
 
-//NOTE: Origin being taken as bottom left corner
-const GAMEBOARD_MAX_X = 9;
-const GAMEBOARD_MAX_Y = 9;
+
 
 // ONLY board has concept of where a ship is
 const gameboardFactory = () => {
@@ -132,4 +131,3 @@ const gameboardFactory = () => {
         placeShip, receiveAttack, allSunk, getOccupiedSpaces, missed, hits
     }
 }
-
