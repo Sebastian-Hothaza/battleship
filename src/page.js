@@ -31,6 +31,15 @@ function loadSite(){
             updateBoards(); 
             //TODO: game should export a var (Ie. game status) so the DOM can import it and use to update header.
         });
+
+        cells[childIDX].addEventListener('mouseenter', (e) => {
+            e.preventDefault();
+            cells[childIDX].classList.add('hover')
+        });
+        cells[childIDX].addEventListener('mouseleave', (e) => {
+            e.preventDefault();
+            cells[childIDX].classList.remove('hover')
+        });
     }
     
    

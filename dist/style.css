@@ -50,9 +50,14 @@
     background-color: lightgreen;
 }
 
+.hover{
+    background-color: silver;
+}
+
 .miss{
     background-color: lightskyblue;
 }
+
 
 .hit{
     background-color: salmon;
@@ -60,4 +65,14 @@
 
 .sunk{
     background-color: red;
+}
+
+
+
+.hover_consider_invalid{
+    background-color: salmon;
+}
+
+.hover_consider_valid{
+    background-color: lightseagreen;
 }
