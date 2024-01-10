@@ -1,12 +1,12 @@
 import { playerFactory } from './player.js';
 import { posnFactory } from './posn.js';
 import { loadSite, drawPersonShip, drawComputerShip, markCell, updateBoards } from './page.js';
+import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from './constants.js';
 
-export { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y, person, computer, play }
+export { person, computer, play }
 
 //NOTE: Origin being taken as bottom left corner
-const GAMEBOARD_MAX_X = 9;
-const GAMEBOARD_MAX_Y = 9;
+
 const shipSizes = [5,4,3,3,2];
 
 
@@ -98,7 +98,7 @@ function processAttack(victim, target){
     // console.log("Attack (", target.x, ',',target.y,')');
     let shipHit = victim.board.receiveAttack(target)
     if (shipHit) {
-        markCell(victim.board,'hit', (((9-target.y)*10) + target.x));
+        markCell(victim.board,'hit', (((GAMEBOARD_MAX_Y-target.y)*10) + target.x));
         
         // Update AI intelligence
         if (shipHit.isSunk()){
@@ -120,7 +120,7 @@ function processAttack(victim, target){
             // console.log("Updated nextMove to: ", computer.nextMove)
         }
 
-        markCell(victim.board,'miss', (((9-target.y)*10) + target.x));
+        markCell(victim.board,'miss', (((GAMEBOARD_MAX_Y-target.y)*10) + target.x));
     }
     updateBoards();
     return false;

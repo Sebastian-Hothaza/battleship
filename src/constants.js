@@ -1,0 +1,4 @@
+export { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y }
+
+const GAMEBOARD_MAX_X = 9;
+const GAMEBOARD_MAX_Y = 9;

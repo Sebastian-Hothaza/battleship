@@ -1,6 +1,6 @@
 // Gameboards should keep track of missed attacks so they can display them properly.
 // TODO: Can we simply to onyl track horizontal/vertical rather than heading?
-import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from './main.js';
+import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from './constants.js';
 import { shipFactory } from './ship.js'
 import { posnFactory } from './posn.js'
 export { gameboardFactory }

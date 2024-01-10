@@ -1,10 +1,8 @@
 import { playerFactory } from './player.js';
 import { posnFactory } from './posn.js';
-import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from './main.js';
+// import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from './main.js';
 
-describe('Player testing', () => {
-    test.todo("foo")
-    /*
+describe('Player testing', () => {  
 
     test('Creating a player', () => {
       expect(playerFactory().board.hits.length).toBe(0);
@@ -26,8 +24,8 @@ describe('Player testing', () => {
         let candidatePosn;
         
         while (!candidatePosn || !attacker.verifyUnique(candidatePosn, victim.board)){
-            candidatePosn = posnFactory( Math.floor(Math.random() * (GAMEBOARD_MAX_X+1)),
-                                                Math.floor(Math.random() * (GAMEBOARD_MAX_Y+1)));
+            candidatePosn = posnFactory( Math.floor(Math.random() * (9+1)),
+                                                Math.floor(Math.random() * (9+1)));
         }
         victim.board.receiveAttack(candidatePosn);
 
@@ -41,8 +39,8 @@ describe('Player testing', () => {
 
         for (let i=0; i<10; i++){
             while (!candidatePosn || !attacker.verifyUnique(candidatePosn, victim.board)){
-                candidatePosn = posnFactory( Math.floor(Math.random() * (GAMEBOARD_MAX_X+1)),
-                                                Math.floor(Math.random() * (GAMEBOARD_MAX_Y+1)));
+                candidatePosn = posnFactory( Math.floor(Math.random() * (9+1)),
+                                                Math.floor(Math.random() * (9+1)));
                 }
             victim.board.receiveAttack(candidatePosn);
         }
@@ -54,17 +52,17 @@ describe('Player testing', () => {
         const victim = playerFactory();
         let candidatePosn;
 
-        for (let i=0; i<((GAMEBOARD_MAX_X+1) * (GAMEBOARD_MAX_Y+1)); i++){
+        for (let i=0; i<((9+1) * (9+1)); i++){
             while (!candidatePosn || !attacker.verifyUnique(candidatePosn, victim.board)){
-                candidatePosn = posnFactory( Math.floor(Math.random() * (GAMEBOARD_MAX_X+1)),
-                                                    Math.floor(Math.random() * (GAMEBOARD_MAX_Y+1)));
+                candidatePosn = posnFactory( Math.floor(Math.random() * (9+1)),
+                                                    Math.floor(Math.random() * (9+1)));
             }
             victim.board.receiveAttack(candidatePosn);
         }
         const allShots = victim.board.missed.concat(victim.board.hits);
-        expect(allShots.length).toBe((GAMEBOARD_MAX_X+1) * (GAMEBOARD_MAX_Y+1));
+        expect(allShots.length).toBe((9+1) * (9+1));
     });
   
-  */
+  
 });
 

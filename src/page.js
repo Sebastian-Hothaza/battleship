@@ -1,4 +1,5 @@
-import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y, person, computer, play } from "./main"
+import { person, computer, play } from "./main"
+import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from './constants.js';
 
 export {loadSite, drawPersonShip, drawComputerShip, markCell, updateBoards}
 
@@ -114,7 +115,7 @@ function drawPersonShip(){
     // ships is array which keeps track of all ship objects on the board. For each ship we call ships[i][1] which returns array of spaces occupied by that ship
     const spacesOccupied = person.board.getOccupiedSpaces(); // array of posns
     for (let i=0; i<spacesOccupied.length; i++){
-        cells[(10*(9 - spacesOccupied[i].y) + spacesOccupied[i].x)].classList.add('ship');
+        cells[(10*(GAMEBOARD_MAX_Y - spacesOccupied[i].y) + spacesOccupied[i].x)].classList.add('ship');
     }
 }
 
@@ -124,6 +125,6 @@ function drawComputerShip(){
     // ships is array which keeps track of all ship objects on the board. For each ship we call ships[i][1] which returns array of spaces occupied by that ship
     const spacesOccupied = computer.board.getOccupiedSpaces(); // array of posns
     for (let i=0; i<spacesOccupied.length; i++){
-        cells[(10*(9 - spacesOccupied[i].y) + spacesOccupied[i].x)].classList.add('ship');
+        cells[(10*(GAMEBOARD_MAX_Y - spacesOccupied[i].y) + spacesOccupied[i].x)].classList.add('ship');
     }
 }

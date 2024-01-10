@@ -1,6 +1,6 @@
 // TODO: Figure out why "this" is needed!
 import { gameboardFactory } from "./gameboard.js"
-import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from "./main.js";
+import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from './constants.js';
 import { posnFactory } from "./posn.js";
 export { playerFactory }
 
@@ -97,7 +97,7 @@ const playerFactory = () => {
                 direction = nextDirArr[nextDirArrIDX];
             }
         }
-
+        
         let candidate = generateNewMove(lastHit);
 
         // Verify is on board
