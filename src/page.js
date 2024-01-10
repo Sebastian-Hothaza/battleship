@@ -8,8 +8,8 @@ let shipSizesIDX = 0;
 let horizontal = true;
 let gameStarted = false;
 let gameOver = false;
+let winner=null;
 
-// TODO: Add rotate button
 
 function loadSite(){
     const content = document.querySelector('#content');
@@ -35,14 +35,17 @@ function loadSite(){
         computerCells[childIDX].addEventListener('mousedown', (e) => {
             e.preventDefault();// TODO: What does this do?
             if (gameStarted && !gameOver){
-                let winner = play(childIDX); // Returns winner or null(same as nothign?)
+                winner = play(childIDX); // Returns winner or null(same as nothign?)
                 updateBoards();
                 if (winner === person){
                     console.log("PERSON WINS")
                     gameOver = true;
+                    updateFooter()
                 } else if (winner === computer){
                     console.log("COMPUTER WINS")
                     gameOver = true;
+                    updateFooter()
+                    drawComputerShip();
                 }
             }
             
@@ -74,7 +77,10 @@ function loadSite(){
                 updateConsideredShip(childIDX, false) //wipe out the preview for that ship
                 drawPersonShip();
                 shipSizesIDX++;
-                if (shipSizesIDX >= shipSizes.length) gameStarted=true;
+                if (shipSizesIDX >= shipSizes.length){
+                    gameStarted=true;
+                    updateFooter();
+                }
             }
         });
 
@@ -132,8 +138,50 @@ function createHeader(){
 function createFooter(){
     const footer = document.createElement('div');
     footer.classList.add('footer');
-    footer.textContent = "footer";
+    footer.id = 'footer'
+
+    const footerText = document.createElement('div');
+    footerText.textContent = "Awaiting fleet positioning...";
+    // footerText.id = 'footerText'
+
+    const rotateBtn = document.createElement('button');
+    rotateBtn.textContent = 'Rotate Ship';
+    // rotateBtn.id = 'rotatebtn';
+    rotateBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        horizontal = !horizontal
+    });
+
+    footer.appendChild(footerText)
+    footer.appendChild(rotateBtn)
+
     return footer;
+}
+
+// Updates footer with relevant info
+// Footer has 3 possible states: setup, ingame, endgame
+// Setup is default/preloaded state
+function updateFooter(){
+    const footer = document.getElementById('footer')
+    if (!gameOver){
+        // show encouraging text and remove rotate button 
+        footer.children[0].textContent = 'Running game...'
+        footer.removeChild(footer.children[1]);
+         
+    } else {
+        // Show winner and restart button
+        winner === person? footer.children[0].textContent = 'PERSON WINS' : footer.children[0].textContent = 'COMPUTER WINS'
+        
+        const restartBtn = document.createElement('button');
+        restartBtn.textContent = "New Game";
+
+        restartBtn.addEventListener('click', (e) => {
+            location.reload();
+        });
+
+        footer.appendChild(restartBtn);
+        
+    }
 }
 
 // Returns div corresponding to a grid
