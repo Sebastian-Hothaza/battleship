@@ -18,30 +18,21 @@ const gameboardFactory = () => {
 
     // Given a posn and direction, attempts to place a ship of specified size. Returns true and places ship if placement is valid, false otherwise
     // Dir is given as oneOf(U,D,L,R). Ie. placeShip((0,0), R, 5) would be a ship with head at origin and spanning to right 5 blocks
-    function placeShip(posn, dir, size){
+    // If queryONLY, ship won't be placed
+    // U and D are used
+    function placeShip(posn, horizontal, size, queryONLY){
         // Check that the posn is valid
         if (posn.x < 0 || posn.y < 0 || posn.x > GAMEBOARD_MAX_X || posn.y > GAMEBOARD_MAX_Y) return false;
 
         // Check that ship placement would not spill outside gameboard
-        switch (dir){
-            case 'L':
-                if (posn.x - size < 0) return false;
-                break;
-            case 'R':
-                if (posn.x + size > GAMEBOARD_MAX_X) return false;
-                break;
-            case 'U':
-                if (posn.y + size > GAMEBOARD_MAX_Y) return false;
-                break;
-            case 'D':
-                if (posn.y - size < 0) return false;
-                break;
-            default:
-                return false;
+        if (horizontal){ //horizontal going right
+            if (posn.x + size > GAMEBOARD_MAX_X+1) return false;
+        }else{ // vertical going down
+            if (posn.y - size < -1) return false;
         }
 
         // Checking that ship playerplacement does not overlap with other ships
-        const spacesOccupied = getSpacesOccupiedByShip(posn, dir, size);
+        const spacesOccupied = getSpacesOccupiedByShip(posn, horizontal, size);
 
         // Check that none of these spaces occupied coincide with any of spaces occupied by current ships
         for (let i=0; i<ships.length; i++){ // Go thru each ship
@@ -53,7 +44,7 @@ const gameboardFactory = () => {
         }
 
         // Creating and placing the ship
-        ships.push( [shipFactory(size), spacesOccupied] ); 
+        if (!queryONLY) ships.push( [shipFactory(size), spacesOccupied] ); 
        
         return true;
     }
@@ -96,33 +87,17 @@ const gameboardFactory = () => {
 
     // Returns an array of posn's corresponding to posns which would be occupied by the specified ship
     // Used internally by placeShip
-    function getSpacesOccupiedByShip(head, dir, size){
+    function getSpacesOccupiedByShip(head, horizontal, size){
         let result = [head]
 
-        switch(dir){
-            case 'L':
-                for (let i=1; i<size; i++){
-                    result.push(posnFactory(head.x-i,head.y))
-                }
-                break;
-            case 'R':
-                for (let i=1; i<size; i++){
-                    result.push(posnFactory(head.x+i,head.y))
-                }
-                break;
-            case 'U':
-                for (let i=1; i<size; i++){
-                    result.push(posnFactory(head.x,head.y+i))
-                }
-                break;
-            case 'D':
-                for (let i=1; i<size; i++){
-                    result.push(posnFactory(head.x,head.y-i))
-                }
-                break;
-            default:
-                //TODO, throw error?
-            
+        if (horizontal){ //horizontal going right
+            for (let i=1; i<size; i++){
+                result.push(posnFactory(head.x+i,head.y))
+            }
+        }else{ // vertical going down
+            for (let i=1; i<size; i++){
+                result.push(posnFactory(head.x,head.y-i))
+            }
         }
         return result;
     }

@@ -1,8 +1,14 @@
-import { person, computer, play, loadBoards } from "./game"
-import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from './constants.js';
+import { person, computer, play, loadComputerBoards, gameOver } from "./game"
+import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y, shipSizes } from './constants.js'; //shipSizes = [5,4,3,3,2];
+import { posnFactory } from "./posn.js";
 
 export { loadSite }
 
+let shipSizesIDX = 0;
+let horizontal = false;
+let gameStarted = false;
+
+// TODO: Add rotate button
 
 function loadSite(){
     const content = document.querySelector('#content');
@@ -23,38 +29,88 @@ function loadSite(){
     computerGrid.id = 'computerGrid';
     content.appendChild(computerGrid);
     // Attach listeners to computer grid
-    let cells = computerGrid.children;
-    for (let childIDX=0; childIDX<cells.length; childIDX++){
-        cells[childIDX].addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            play(childIDX); 
-            updateBoards(); 
+    let computerCells = computerGrid.children;
+    for (let childIDX=0; childIDX<computerCells.length; childIDX++){
+        computerCells[childIDX].addEventListener('mousedown', (e) => {
+            e.preventDefault();// TODO: What does this do?
+            if (gameStarted && !gameOver){
+                play(childIDX); 
+                updateBoards();
+                // NOTE: This can result in a game over event! Shouyld play return the winner?
+            }
             //TODO: game should export a var (Ie. game status) so the DOM can import it and use to update header.
         });
 
-        cells[childIDX].addEventListener('mouseenter', (e) => {
+        computerCells[childIDX].addEventListener('mouseenter', (e) => {
             e.preventDefault();
-            cells[childIDX].classList.add('hover')
+            if (gameStarted && !gameOver) computerCells[childIDX].classList.add('hover')
         });
-        cells[childIDX].addEventListener('mouseleave', (e) => {
+
+        computerCells[childIDX].addEventListener('mouseleave', (e) => {
             e.preventDefault();
-            cells[childIDX].classList.remove('hover')
+            if (gameStarted && !gameOver) computerCells[childIDX].classList.remove('hover')
         });
     }
-    
-   
 
     const personGrid = createGrid();
     personGrid.id = 'personGrid';
     content.appendChild(personGrid);
 
+    // Attach listeners to person grid - used for placing of person ships at game start
+    let personCells = personGrid.children;
+    for (let childIDX=0; childIDX<personCells.length; childIDX++){
+        personCells[childIDX].addEventListener('mousedown', (e) => {
+            e.preventDefault();// TODO: What does this do?
+            if (!gameStarted && person.board.placeShip(posnFactory(childIDX%10, 9 - parseInt(childIDX/10)), horizontal, shipSizes[shipSizesIDX], false)){
+                // Placed ship successfully 
+                updateConsideredShip(childIDX, false) //wipe out the preview for that ship
+                drawPersonShip();
+                shipSizesIDX++;
+                if (shipSizesIDX >= shipSizes.length) gameStarted=true;
+            }
+        });
+
+        
+        personCells[childIDX].addEventListener('mouseenter', (e) => {
+            e.preventDefault();
+            if (!gameStarted) updateConsideredShip(childIDX, true); 
+        });
+
+        personCells[childIDX].addEventListener('mouseleave', (e) => {
+            e.preventDefault();
+            if (!gameStarted) updateConsideredShip(childIDX, false);
+        });
+    }
+
     content.appendChild(createFooter());
 
-    loadBoards();  
-    drawPersonShip();
-    drawComputerShip();
-
+    loadComputerBoards(); // game.js handles 
+    drawComputerShip(); //TODO: Dev use only, remove
 }
+
+// Updates grid to draw/wipe considered ships on hover
+function updateConsideredShip(IDX, draw){
+    const cells = document.getElementById('personGrid').children;
+    for (let i=0; i<shipSizes[shipSizesIDX]; i++){
+        let newIDX;
+        horizontal? newIDX = IDX + i: newIDX = IDX + i*10 
+        if ((horizontal && parseInt(IDX/10) !== parseInt(newIDX/10)) || newIDX>99) continue; // Spill over detection
+        if (draw && person.board.placeShip(posnFactory(IDX%10, 9 - parseInt(IDX/10)),horizontal,shipSizes[shipSizesIDX],true)){
+            // VALID DRAW
+            cells[newIDX].classList.remove('hover_consider_invalid')
+            cells[newIDX].classList.add('hover_consider_valid')
+        }else if (draw) {
+            // INVALID DRAW
+            cells[newIDX].classList.remove('hover_consider_valid')
+            cells[newIDX].classList.add('hover_consider_invalid')
+        } else{
+            // ERASE
+            cells[newIDX].classList.remove('hover_consider_invalid')
+            cells[newIDX].classList.remove('hover_consider_valid')
+        }
+    }        
+}
+
 
 // Returns div corresponding to header
 function createHeader(){

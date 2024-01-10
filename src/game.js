@@ -2,7 +2,7 @@ import { playerFactory } from './player.js';
 import { posnFactory } from './posn.js';
 import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y, shipSizes } from './constants.js';
 
-export { loadBoards, play, person, computer }
+export { loadComputerBoards, play, person, computer, gameOver }
 
 
 
@@ -10,36 +10,34 @@ export { loadBoards, play, person, computer }
 const person = playerFactory();
 const computer = playerFactory();
 let gameOver = false;
+
 let first_attack = posnFactory(9,5); // DEV USE ONLY
 
 
 
 // Loads the ships onto the boards
-function loadBoards(){
+function loadComputerBoards(){
     // Placing the computer ships
     for (let i=0; i<shipSizes.length; i++){
         let placePosn;
-        let dir;
+        
         do { 
             placePosn = posnFactory( Math.floor(Math.random() * (GAMEBOARD_MAX_X+1)), Math.floor(Math.random() * (GAMEBOARD_MAX_Y+1)));
-            placePosn.x%2? dir='R' : dir='U'
-        } while (!computer.board.placeShip(placePosn,dir,shipSizes[i]))
+            
+        } while (!computer.board.placeShip(placePosn,placePosn.x%2,shipSizes[i],false))
     }
-
-    // Placing the player ships
-    person.board.placeShip(posnFactory(1,1), 'R', 5);
-    person.board.placeShip(posnFactory(9,3), 'U', 3);
 }
 
 // Called by click-listener when person clicks hostile cell
 // Verifies move is valid and calls processAttack
 function play(move){
-    if (gameOver) return; 
+    // if (gameOver) return; // DOM shouldn't call play in this case, we leave it to DOM to not make play calls when game is over
 
     move = posnFactory(move%10, 9 - parseInt(move/10)); // Convert to posn. Currently only supports 10x10 grids
     let computerTarget;
         
     // Verify target hasn't been shot at before //TODO: update this using shots[] in player instead
+    // TODO: Move to DOM?
     if (!person.verifyUnique(move, computer.board)) {
         // TODO: Update footer to advise user 
         return;
