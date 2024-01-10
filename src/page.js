@@ -1,12 +1,13 @@
-import { person, computer, play, loadComputerBoards, gameOver } from "./game"
+import { person, computer, play, loadComputerBoards } from "./game"
 import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y, shipSizes } from './constants.js'; //shipSizes = [5,4,3,3,2];
 import { posnFactory } from "./posn.js";
 
 export { loadSite }
 
 let shipSizesIDX = 0;
-let horizontal = false;
+let horizontal = true;
 let gameStarted = false;
+let gameOver = false;
 
 // TODO: Add rotate button
 
@@ -34,10 +35,17 @@ function loadSite(){
         computerCells[childIDX].addEventListener('mousedown', (e) => {
             e.preventDefault();// TODO: What does this do?
             if (gameStarted && !gameOver){
-                play(childIDX); 
+                let winner = play(childIDX); // Returns winner or null(same as nothign?)
                 updateBoards();
-                // NOTE: This can result in a game over event! Shouyld play return the winner?
+                if (winner === person){
+                    console.log("PERSON WINS")
+                    gameOver = true;
+                } else if (winner === computer){
+                    console.log("COMPUTER WINS")
+                    gameOver = true;
+                }
             }
+            
             //TODO: game should export a var (Ie. game status) so the DOM can import it and use to update header.
         });
 
@@ -85,7 +93,7 @@ function loadSite(){
     content.appendChild(createFooter());
 
     loadComputerBoards(); // game.js handles 
-    drawComputerShip(); //TODO: Dev use only, remove
+    // drawComputerShip(); //TODO: Dev use only, remove
 }
 
 // Updates grid to draw/wipe considered ships on hover
@@ -142,25 +150,32 @@ function createGrid(){
     return grid;
 }
 
-// Updates both gameboards to reflect hits/misses
+// Updates both gameboards to reflect hits/misses/sunken ship
 function updateBoards(){
     const computerCells = document.getElementById('computerGrid').childNodes; // 0 to 99
     const personCells = document.getElementById('personGrid').childNodes; 
 
-    // Update computer grid to show misses and hits
+    // Update computer grid to show misses, hits and sink
     for (let i=0; i<computer.board.missed.length; i++){ // go thru missed array (array of posns)
         computerCells[(10*(9 - computer.board.missed[i].y) + computer.board.missed[i].x)].classList.add('miss');
     }
     for (let i=0; i<computer.board.hits.length; i++){ // go thru hits array (array of posns)
         computerCells[(10*(9 - computer.board.hits[i].y) + computer.board.hits[i].x)].classList.add('hit');
     }
+    for (let i=0; i<computer.board.sunkenShips.length; i++){ // go thru sunkenShips array (array of posns)
+        computerCells[(10*(9 - computer.board.sunkenShips[i].y) + computer.board.sunkenShips[i].x)].classList.add('sunk');
+    }
+
     
-    // Update person grid to show misses and hits
+    // Update person grid to show misses, hits and sink
     for (let i=0; i<person.board.missed.length; i++){ // go thru missed array (array of posns)
         personCells[(10*(9 - person.board.missed[i].y) + person.board.missed[i].x)].classList.add('miss');
     }
     for (let i=0; i<person.board.hits.length; i++){ // go thru missed array (array of posns)
         personCells[(10*(9 - person.board.hits[i].y) + person.board.hits[i].x)].classList.add('hit');
+    } 
+    for (let i=0; i<person.board.sunkenShips.length; i++){ // go thru sunkenShips array (array of posns)
+        personCells[(10*(9 - person.board.sunkenShips[i].y) + person.board.sunkenShips[i].x)].classList.add('sunk');
     } 
 }
 
@@ -197,3 +212,4 @@ function drawComputerShip(){
         cells[(10*(GAMEBOARD_MAX_Y - spacesOccupied[i].y) + spacesOccupied[i].x)].classList.add('ship');
     }
 }
+

@@ -14,7 +14,9 @@ const gameboardFactory = () => {
     // Gameboard needs to know which ship occupies which spots
     let ships = []; // Tracks ship objects placed on the board. Ie. ships[0] = [ship obj, array of posns occupied by ship object]
     let missed = []; // Array of missed shot posn's
+    let sunkenShips = []; // Array of posns to track sunken ships on the board
     let hits = []; // Array of hit shot posn's
+    
 
     // Given a posn and direction, attempts to place a ship of specified size. Returns true and places ship if placement is valid, false otherwise
     // Dir is given as oneOf(U,D,L,R). Ie. placeShip((0,0), R, 5) would be a ship with head at origin and spanning to right 5 blocks
@@ -73,7 +75,7 @@ const gameboardFactory = () => {
         return true;
     }
 
-    // Returns an array of posns corresponding to spaces occupied by ships
+    // Returns an array of posns corresponding to spaces occupied by all ship on board
     // Called in page.js by drawPersonShip
     function getOccupiedSpaces(){
         let result = [];
@@ -102,7 +104,18 @@ const gameboardFactory = () => {
         return result;
     }
 
+    // Updates sunkenShips for board
+    function updateSunkenShips(ship){
+        for (let i=0; i<ships.length; i++){
+            if (ship === ships[i][0]){
+                for (let k=0; k<ships[i][1].length; k++){
+                    sunkenShips.push(ships[i][1][k])
+                }
+            }
+        }
+    }
+
     return{
-        placeShip, receiveAttack, allSunk, getOccupiedSpaces, missed, hits
+        placeShip, receiveAttack, allSunk, getOccupiedSpaces, updateSunkenShips, missed, hits, sunkenShips
     }
 }

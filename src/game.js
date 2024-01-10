@@ -2,14 +2,15 @@ import { playerFactory } from './player.js';
 import { posnFactory } from './posn.js';
 import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y, shipSizes } from './constants.js';
 
-export { loadComputerBoards, play, person, computer, gameOver }
+export { loadComputerBoards, play, person, computer }
 
 
 
 // Creating the players
 const person = playerFactory();
 const computer = playerFactory();
-let gameOver = false;
+let winner = null;
+
 
 let first_attack = posnFactory(9,5); // DEV USE ONLY
 
@@ -30,8 +31,9 @@ function loadComputerBoards(){
 
 // Called by click-listener when person clicks hostile cell
 // Verifies move is valid and calls processAttack
+// TODO: Return winning player or null?
 function play(move){
-    // if (gameOver) return; // DOM shouldn't call play in this case, we leave it to DOM to not make play calls when game is over
+    // if (winner) return; // DOM shouldn't call play in this case, we leave it to DOM to not make play calls when game is over
 
     move = posnFactory(move%10, 9 - parseInt(move/10)); // Convert to posn. Currently only supports 10x10 grids
     let computerTarget;
@@ -46,9 +48,7 @@ function play(move){
     // Process the plays
     person.shots.push(move);
     if (processAttack(computer, move)){
-        console.log("PERSON WINS");
-        gameOver = true;
-        return;
+        return person;
     }
     
 
@@ -73,9 +73,7 @@ function play(move){
     
     computer.shots.push(computerTarget);
     if (processAttack(person, computerTarget)){ 
-        console.log("COMPUTER WINS");
-        gameOver = true;
-        return;
+        return computer;
     }
 }
 
@@ -90,11 +88,13 @@ function processAttack(victim, target){
         // console.log('BOOM')
         // Update AI intelligence
         if (shipHit.isSunk()){
-            console.log("ship sunk")
+            // console.log("ship sunk")
             if (victim === person){
                 computer.nextMove = false;
                 computer.resetnextMove();
             }
+            victim.board.updateSunkenShips(shipHit);
+            
                             
         } else if (victim === person){
             computer.updateNextMove(target, shipHit);
