@@ -1,7 +1,6 @@
 import { playerFactory } from './player.js';
 import { posnFactory } from './posn.js';
 import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y, shipSizes } from './constants.js';
-import { drawComputerShip, drawPersonShip, markCell, updateBoards } from './page.js';
 
 export { loadBoards, play, person, computer }
 
@@ -15,7 +14,7 @@ let first_attack = posnFactory(9,5); // DEV USE ONLY
 
 
 
-// Loads the ships onto the boards 
+// Loads the ships onto the boards
 function loadBoards(){
     // Placing the computer ships
     for (let i=0; i<shipSizes.length; i++){
@@ -30,11 +29,6 @@ function loadBoards(){
     // Placing the player ships
     person.board.placeShip(posnFactory(1,1), 'R', 5);
     person.board.placeShip(posnFactory(9,3), 'U', 3);
-
-    
-
-    drawPersonShip(); // Draws the persons ships
-    drawComputerShip(); // Draws the computer ships - DEV USE ONLY
 }
 
 // Called by click-listener when person clicks hostile cell
@@ -94,8 +88,8 @@ function processAttack(victim, target){
     // console.log("Attack (", target.x, ',',target.y,')');
     let shipHit = victim.board.receiveAttack(target)
     if (shipHit) {
-        markCell(victim.board,'hit', (((GAMEBOARD_MAX_Y-target.y)*10) + target.x));
-        
+        // markCell(victim.board,'hit', (((GAMEBOARD_MAX_Y-target.y)*10) + target.x));
+        // console.log('BOOM')
         // Update AI intelligence
         if (shipHit.isSunk()){
             console.log("ship sunk")
@@ -107,18 +101,19 @@ function processAttack(victim, target){
         } else if (victim === person){
             computer.updateNextMove(target, shipHit);
         }
-        updateBoards();
+        // updateBoards();
         return victim.board.allSunk(); // Check for win
     } else{
+        // console.log('SPLASH')
         // Update AI intelligence ONLY if nextMove was defined
         if (victim === person && computer.nextMove){
             computer.updateNextMove(target, shipHit)
             // console.log("Updated nextMove to: ", computer.nextMove)
         }
 
-        markCell(victim.board,'miss', (((GAMEBOARD_MAX_Y-target.y)*10) + target.x));
+        // markCell(victim.board,'miss', (((GAMEBOARD_MAX_Y-target.y)*10) + target.x));
     }
-    updateBoards();
+    // updateBoards();
     return false;
 }
 
