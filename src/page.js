@@ -1,4 +1,4 @@
-import { person, computer, play } from "./main"
+import { person, computer, play } from "./game"
 import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from './constants.js';
 
 export {loadSite, drawPersonShip, drawComputerShip, markCell, updateBoards}
