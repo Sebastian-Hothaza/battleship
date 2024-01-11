@@ -2,7 +2,6 @@ import { gameboardFactory } from './gameboard.js';
 import { posnFactory } from './posn.js';
 
 describe('Ship testing', () => {
-    test.todo("foo")
     
     test('building a gameboard', () => {
       expect(gameboardFactory()).toBeTruthy();

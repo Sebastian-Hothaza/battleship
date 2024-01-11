@@ -13,7 +13,7 @@ describe('Ship testing', () => {
     test('Hit detection - not sunk', () => {
       const myShip = shipFactory(3);
       myShip.hit();
-      expect(myShip.isSunk()).fals;
+      expect(myShip.isSunk()).toBe(false);
     });
   
     test('Hit detection - sunk', () => {

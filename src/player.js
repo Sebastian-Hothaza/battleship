@@ -1,32 +1,27 @@
-// TODO: Figure out why "this" is needed!
-import { gameboardFactory } from "./gameboard.js"
 import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from './constants.js';
 import { posnFactory } from "./posn.js";
+import { gameboardFactory } from "./gameboard.js"
+
 export { playerFactory }
 
 const playerFactory = () => {
-    let board = gameboardFactory(); // Board associated with the player
-    let shots = [] // Array of posns tracking shots taken by player
+    let board = gameboardFactory();             // Board associated with the player
+    let shots = []                              // Array of posns tracking shots taken by a player
 
-    let nextMove = false; // Used by AI
+    let nextMove = null;                        // Used by AI: represents next posn to shoot at
+    let lastHit = false;                        // Used by AI: tracks last known hit by AI
+    let firstHit = false;                       // Used by AI: tracks the posn of where we first struck the ship
+    const nextDirArr = ['R', 'L', 'U', 'D'];    // Used by AI: 
+    let nextDirArrIDX = 0;                      // Used by AI:
+    let direction = 'R';                        // Used by AI:
 
-    let lastHit = false; // Tracks last known hit by AI
-    let firstHit = false; // Tracks the posn of where we first struck the ship
-    const nextDirArr = ['R', 'L', 'U', 'D']; // Used by AI
-    let nextDirArrIDX = 0; // Used by AI
-    let direction = 'R';
-
-    // Verify that the candidate target is a unique shot within targetGB 
-    function verifyUnique(target, targetGB){
-        let allShots = targetGB.missed.concat(targetGB.hits); //array of posns that
-        for (let i=0; i<allShots.length; i++){ 
-            if (allShots[i].x === target.x && allShots[i].y === target.y){ 
-                return false;
-            } 
+    // Verify that target has not been shot at before
+    function verifyUnique(target){
+        for (let i=0; i<shots.length; i++){ 
+            if (shots[i].x === target.x && shots[i].y === target.y) return false;
         }
         return true;
     }
-
 
     // Increments IDX by 1 featuring wrap around (TODO: Simply with modulo?)
     function advancenextDirArrIDX(){
@@ -55,7 +50,7 @@ const playerFactory = () => {
         }
     }
 
-    // Returns posn coresponding to moving in direction from origin
+    // Returns posn coresponding to moving in direction from origin. Not guaranteed legal
     function generateNewMove(origin){
         switch (direction){
             case 'R':
@@ -69,13 +64,6 @@ const playerFactory = () => {
         }
     }
 
-    // given a candidate posn, return true if we have ever shot there before
-    function verifyUniqueNewMove(candidate){
-        for (let i=0; i<shots.length; i++){
-            if (candidate.x === shots[i].x && candidate.y === shots[i].y) return false;
-        }
-        return true;
-    }
 
     // Updates nextMove
     // current represents where the attack took place
@@ -108,7 +96,7 @@ const playerFactory = () => {
         }
      
         // Verify not somewhere we have shot before
-        while (!verifyUniqueNewMove(candidate)){ 
+        while (!verifyUnique(candidate)){ 
             dirLimit--;
             
             // Prevent infinite loop(edge case)
@@ -122,10 +110,12 @@ const playerFactory = () => {
             candidate = generateNewMove(lastHit);
         }
         // We are confident candidate is on board and unique, so it will be the next move
-        this.nextMove = candidate;
+        nextMove = candidate; //TODO: Why we need this?
     }
 
+    // Resets AI params. NOTE: Called as a method Ie. myPlayerObj.resetnextMove(). So we must use "this"
     function resetnextMove(){
+        // nextMove = null;
         lastHit = false; 
         firstHit = false;
         nextDirArrIDX = 0;
