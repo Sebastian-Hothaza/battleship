@@ -11,25 +11,68 @@ const playerFactory = () => {
     let nextMove = null;                        // Used by AI: represents next posn to shoot at
     let lastHit = false;                        // Used by AI: tracks last known hit by AI
     let firstHit = false;                       // Used by AI: tracks the posn of where we first struck the ship
-    const nextDirArr = ['R', 'L', 'U', 'D'];    // Used by AI: 
-    let nextDirArrIDX = 0;                      // Used by AI:
-    let direction = 'R';                        // Used by AI:
+    const nextDirArr = ['R', 'L', 'U', 'D'];    // Used by AI: possible directions to consider
+    let nextDirArrIDX = 0;                      // Used by AI: cycling thru nextDirArr
+    let direction = 'R';                        // Used by AI: starting direction to probe
 
     // Verify that target has not been shot at before
-    function verifyUnique(target){
+    function verifyUniqueShot(target){
         for (let i=0; i<shots.length; i++){ 
             if (shots[i].x === target.x && shots[i].y === target.y) return false;
         }
         return true;
     }
 
-    // Increments IDX by 1 featuring wrap around (TODO: Simply with modulo?)
-    function advancenextDirArrIDX(){
-        if (nextDirArrIDX === 3){
-            nextDirArrIDX = 0;
-        }else{
-            nextDirArrIDX++;
+    // Given a current posn, updates nextMove based on if isHit
+    // Called when ship is HIT OR we found a ship but missed a shot BEFORE we sunk it
+    function updateNextMove(current, isHit){
+        // Setting the direction to take and where we should move FROM (lastHit)
+        if (isHit){ //HIT - don't change direction UNLESS continue would put you off the map
+            if (!firstHit){
+                firstHit = current; //define first hit if it truly is the first one
+            }
+            lastHit = current;
+        } else{ //MISS - need to try different direction OR chase back
+            if (firstHit == lastHit){   // Our one and only previous hit is the end piece of the ship. Try different dir.
+                nextDirArrIDX = (nextDirArrIDX+1)%nextDirArr.length;
+                direction = nextDirArr[nextDirArrIDX];
+            } else {                    //missed after 2 hits on the ship; chase back 
+                lastHit = firstHit;     //take first hit as new reference point
+                flipDir();
+                nextMove = generateNewPosn(lastHit);
+                return; // We are chasing back - safe to return directly
+            }
         }
+
+        // We know the direction to proceed in and from where
+        let candidate = generateNewPosn(lastHit);
+
+        // Verify candidate is on board and not somwhere we have shot before and
+        while (candidate.x > GAMEBOARD_MAX_X || candidate.x < 0 || candidate.y > GAMEBOARD_MAX_Y || candidate.y < 0 || !verifyUniqueShot(candidate)){
+            if (firstHit != lastHit){   //Offmap after 2 hits on the ship; chase back. 
+                lastHit = firstHit;     //take first hit as new reference point
+                flipDir();
+                nextMove = generateNewPosn(lastHit);
+                return; // We are chasing back - safe to return directly
+            }
+
+            // Try a different direction
+            nextDirArrIDX = (nextDirArrIDX+1)%nextDirArr.length
+            
+            direction = nextDirArr[nextDirArrIDX];
+            candidate = generateNewPosn(lastHit);
+        }
+        
+        nextMove = candidate; // We are confident candidate is on board and unique, so it will be the next move
+    }
+
+    // Resets AI params
+    function resetnextMove(){
+        nextMove = null;
+        lastHit = false; 
+        firstHit = false;
+        nextDirArrIDX = 0;
+        direction = 'R';
     }
 
     // Flips direction to opposite
@@ -51,7 +94,7 @@ const playerFactory = () => {
     }
 
     // Returns posn coresponding to moving in direction from origin. Not guaranteed legal
-    function generateNewMove(origin){
+    function generateNewPosn(origin){
         switch (direction){
             case 'R':
                 return posnFactory(origin.x+1, origin.y);
@@ -64,66 +107,8 @@ const playerFactory = () => {
         }
     }
 
-
-    // Updates nextMove
-    // current represents where the attack took place
-    // Called when ship is HIT OR we found a ship but missed BEFORE we sunk it
-    function updateNextMove(current, isHit){
-        let dirLimit = 3; // Limiting the amount of options we should evaluate before giving up and taking first hit as origin (Ie. chase other way)
-
-        // Figuring out what direction to take and where we should move from (lastHit)
-        if (isHit){
-            if (!firstHit) firstHit = current; //define first hit if it truly is the first one
-            // Dont change direction
-            lastHit = current;
-        } else{ //MISS
-            if (firstHit != lastHit){ //we missed after we had 2 hits on the ship; so go the other way
-                lastHit = firstHit; 
-                flipDir();
-            } else { // Our one and only previous hit is the end piece of the ship. Try different dir.
-                advancenextDirArrIDX();
-                direction = nextDirArr[nextDirArrIDX];
-            }
-        }
-        
-        let candidate = generateNewMove(lastHit);
-
-        // Verify is on board
-        while (candidate.x > GAMEBOARD_MAX_X || candidate.x < 0 || candidate.y > GAMEBOARD_MAX_Y || candidate.y < 0){
-            advancenextDirArrIDX();
-            direction = nextDirArr[nextDirArrIDX];
-            candidate = generateNewMove(lastHit);
-        }
-     
-        // Verify not somewhere we have shot before
-        while (!verifyUnique(candidate)){ 
-            dirLimit--;
-            
-            // Prevent infinite loop(edge case)
-            // Update lastHit to actually be first hit
-            if (dirLimit < 0) {
-                lastHit = firstHit;
-                dirLimit = 3;
-            } 
-            advancenextDirArrIDX();
-            direction = nextDirArr[nextDirArrIDX];
-            candidate = generateNewMove(lastHit);
-        }
-        // We are confident candidate is on board and unique, so it will be the next move
-        nextMove = candidate; //TODO: Why we need this?
-    }
-
-    // Resets AI params. NOTE: Called as a method Ie. myPlayerObj.resetnextMove(). So we must use "this"
-    function resetnextMove(){
-        // nextMove = null;
-        lastHit = false; 
-        firstHit = false;
-        nextDirArrIDX = 0;
-        direction = 'R';
-    }
-   
     return {
-        verifyUnique, updateNextMove, resetnextMove, board, nextMove, shots
+        verifyUniqueShot, updateNextMove, resetnextMove, board, shots, get nextMove(){return nextMove;}, set nextMove(newnextMove){nextMove=newnextMove}
     }
 }
 

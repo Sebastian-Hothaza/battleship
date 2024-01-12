@@ -23,7 +23,7 @@ describe('Player testing', () => {
         const victim = playerFactory();
         let candidatePosn;
         
-        while (!candidatePosn || !attacker.verifyUnique(candidatePosn, victim.board)){
+        while (!candidatePosn || !attacker.verifyUniqueShot(candidatePosn, victim.board)){
             candidatePosn = posnFactory( Math.floor(Math.random() * (9+1)),
                                                 Math.floor(Math.random() * (9+1)));
         }
@@ -38,7 +38,7 @@ describe('Player testing', () => {
         let candidatePosn;
 
         for (let i=0; i<10; i++){
-            while (!candidatePosn || !attacker.verifyUnique(candidatePosn, victim.board)){
+            while (!candidatePosn || !attacker.verifyUniqueShot(candidatePosn, victim.board)){
                 candidatePosn = posnFactory( Math.floor(Math.random() * (9+1)),
                                                 Math.floor(Math.random() * (9+1)));
                 }
@@ -53,7 +53,7 @@ describe('Player testing', () => {
         let candidatePosn;
 
         for (let i=0; i<((9+1) * (9+1)); i++){
-            while (!candidatePosn || !attacker.verifyUnique(candidatePosn, victim.board)){
+            while (!candidatePosn || !attacker.verifyUniqueShot(candidatePosn, victim.board)){
                 candidatePosn = posnFactory( Math.floor(Math.random() * (9+1)),
                                                     Math.floor(Math.random() * (9+1)));
             }

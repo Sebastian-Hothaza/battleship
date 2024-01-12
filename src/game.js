@@ -8,8 +8,6 @@ export { person, computer, loadComputerBoard, play }
 const person = playerFactory();
 const computer = playerFactory();
 
-let first_attack = posnFactory(5,5); //TODO DEV USE ONLY
-
 // Loads the computer ships onto board
 function loadComputerBoard(){
     let placePosn;
@@ -25,36 +23,21 @@ function loadComputerBoard(){
 function play(personTarget){
     let computerTarget;
 
-    
-    
-    if (!person.verifyUnique(personTarget))  return; // TODO: Move to DOM? update this using shots[] in player instead
-        
-        
-    
+    if (!person.verifyUniqueShot(personTarget))  return;
         
     // Process person's attack
     person.shots.push(personTarget);
     if (processAttack(computer, personTarget)) return person;
 
-
-    
-        
-    // TODO: Clean up here after checking player.js
     // Define computerTarget; either random or based off of AI logic
-    if (computer.nextMove) computerTarget = computer.nextMove; // Check if nextMove is defined (AI logic in player module)
-    
-    if (!computerTarget) { // Generate a random valid target for computer to shoot
-        while (!computerTarget || !computer.verifyUnique(computerTarget)){
+    if (!computer.nextMove) {
+        while (!computerTarget || !computer.verifyUniqueShot(computerTarget)){
             computerTarget = posnFactory( Math.floor(Math.random() * (GAMEBOARD_MAX_X+1)), Math.floor(Math.random() * (GAMEBOARD_MAX_Y+1)));
         }
+    }else{
+        computerTarget = computer.nextMove; 
     }
-
-     //DEV USE ONLY
-    if (first_attack){
-        computerTarget = first_attack;
-        first_attack = false;
-    }
-
+  
     // Process computer's attack
     computer.shots.push(computerTarget);
     if (processAttack(person, computerTarget)) return computer;
@@ -63,14 +46,10 @@ function play(personTarget){
 
 // Returns true if attack results in win, false otherwise
 function processAttack(victim, target){
-    // console.log("Attack (", target.x, ',',target.y,')'); // TODO
     let shipHit = victim.board.receiveAttack(target) //returns the ship if the attack hit, else returns false. Also updates boards hits/missed arrays
     if (shipHit) {
         if (shipHit.isSunk()){
-            if (victim === person) {
-                computer.nextMove = null; //TODO: This causes issues?
-                computer.resetnextMove();
-            }
+            if (victim === person) computer.resetnextMove();
         } else if (victim === person){ 
             computer.updateNextMove(target, true); // Update AI intelligence
         }

@@ -29,8 +29,7 @@ function loadSite(){
     content.appendChild(createFooter());
 
     // Placing computer ships
-    loadComputerBoard(); 
-    drawShips('computerGrid'); //TODO: REMOVE
+    loadComputerBoard();
 }
 
 // Returns div corresponding to header
