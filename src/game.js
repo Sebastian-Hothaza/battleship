@@ -35,9 +35,9 @@ function play(personTarget){
             computerTarget = posnFactory( Math.floor(Math.random() * (GAMEBOARD_MAX_X+1)), Math.floor(Math.random() * (GAMEBOARD_MAX_Y+1)));
         }
     }else{
-        computerTarget = computer.nextMove; 
+        computerTarget = computer.nextMove;
     }
-  
+
     // Process computer's attack
     computer.shots.push(computerTarget);
     if (processAttack(person, computerTarget)) return computer;

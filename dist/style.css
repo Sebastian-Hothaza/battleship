@@ -1,43 +1,69 @@
 * {
     margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', arial, sans-serif;
+    background-color: azure;
 }
 
 #content{
     display: grid;
-    grid-template-columns: 50% 50%;
-    padding: 100px;
-    border: 2px solid red;
-    gap: 2px;
+    grid-template: 1fr 1fr;
 
-    justify-items: center;
+    justify-items: center; 
+    
+    gap: 1em;
+    padding: 1em;
+
+    min-width: fit-content;
+    max-width: 3000px;
+    margin: auto;
 }
 
 
+
+
 .header{
-    color: blue;
-    grid-column-start: span 2;
+    grid-column: span 2;
+    font-size: 5em;
+    font-weight: 900;
+    padding-bottom: .5em;
 }
 
 .label{
     color: green;
+    font-size: 2em;
+    width:fit-content
 }
 
 .grid{
     display: grid;
     grid-template-columns: repeat(10, 1fr);
-        max-width: fit-content;
-        /* pointer-events: none; */
+    border: .4em solid darkgreen
 }
 
 .cell{
-    border: 1px solid gray;
+    border: 1px dashed gray;
+    background-color: lightblue;
     height: 4em;
     width: 4em;
 }
 
 .footer{
     color: purple;
-    grid-column-start: span 2;
+    font-size: 2em;
+    grid-column: span 2;
+    padding-top: 1em;
+}
+
+button{
+    color: white;
+    background-color: purple;
+    border: none;
+    padding: .5em 1em;
+    font-weight: 900;
+    font-size: .8em;
+
+    margin-left: 1em;
 }
 
 
@@ -46,28 +72,37 @@
 }
 
 .hover{
-    background-color: silver;
+    cursor: crosshair;
 }
-
-.miss{
-    background-color: lightskyblue;
-}
-
-
-.hit{
-    background-color: salmon;
-}
-
-.sunk{
-    background-color: red;
-}
-
-
 
 .hover_consider_invalid{
-    background-color: salmon;
+    background-color: pink;
+    background-image: url("images/invalid.png");
+    background-size: contain;
+    cursor: not-allowed;
 }
 
 .hover_consider_valid{
     background-color: lightseagreen;
+    cursor: grab;
 }
+
+.miss{
+    background-color: skyblue;
+    background-image: url("images/splash.png");
+    background-size: contain;
+}
+
+.hit{
+    background-color: salmon;
+    background-image: url("images/fire.png");
+    background-size: contain;
+    
+}
+
+.sunk{
+    background-image: url("images/skull.png");
+    background-size: contain;
+}
+
+

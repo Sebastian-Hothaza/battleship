@@ -26,6 +26,7 @@ const playerFactory = () => {
     // Given a current posn, updates nextMove based on if isHit
     // Called when ship is HIT OR we found a ship but missed a shot BEFORE we sunk it
     function updateNextMove(current, isHit){
+        let loopCount = 0; 
         // Setting the direction to take and where we should move FROM (lastHit)
         if (isHit){ //HIT - don't change direction UNLESS continue would put you off the map
             if (!firstHit){
@@ -40,19 +41,30 @@ const playerFactory = () => {
                 lastHit = firstHit;     //take first hit as new reference point
                 flipDir();
                 nextMove = generateNewPosn(lastHit);
-                return; // We are chasing back - safe to return directly
+                while (!verifyUniqueShot(nextMove)) { //Skip over previously hit squares
+                    nextMove = generateNewPosn(nextMove); 
+                }
+                return; 
             }
         }
 
         // We know the direction to proceed in and from where
         let candidate = generateNewPosn(lastHit);
 
-        // Verify candidate is on board and not somwhere we have shot before and
+        // Verify candidate is on board and not somwhere we have shot before
         while (candidate.x > GAMEBOARD_MAX_X || candidate.x < 0 || candidate.y > GAMEBOARD_MAX_Y || candidate.y < 0 || !verifyUniqueShot(candidate)){
+            loopCount++;
+            if (loopCount>3){ // Unique edge cases exit
+                resetnextMove();
+                return;
+            }
             if (firstHit != lastHit){   //Offmap after 2 hits on the ship; chase back. 
                 lastHit = firstHit;     //take first hit as new reference point
                 flipDir();
                 nextMove = generateNewPosn(lastHit);
+                while (!verifyUniqueShot(nextMove)) { //Skip over previously hit squares
+                    nextMove = generateNewPosn(nextMove); 
+                }
                 return; // We are chasing back - safe to return directly
             }
 
@@ -62,7 +74,6 @@ const playerFactory = () => {
             direction = nextDirArr[nextDirArrIDX];
             candidate = generateNewPosn(lastHit);
         }
-        
         nextMove = candidate; // We are confident candidate is on board and unique, so it will be the next move
     }
 

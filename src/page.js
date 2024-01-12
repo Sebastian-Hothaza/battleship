@@ -18,7 +18,7 @@ function loadSite(){
     content.appendChild(createHeader());
 
     // GRID LABELS
-    content.appendChild(createLabel('Enemy'));
+    content.appendChild(createLabel('Enemy Fleet'));
     content.appendChild(createLabel('Your Fleet'));
 
     // GRIDS
@@ -151,7 +151,7 @@ function updateFooter(){
     const footer = document.getElementById('footer')
     if (!gameOver){
         // show encouraging text
-        footer.textContent = 'Fortune favours the bold...'
+        footer.textContent = 'Plan your next move carefully...'
          
     } else {
         // Show winner and restart button
