@@ -1,6 +1,5 @@
-import { playerFactory } from './player.js';
-import { posnFactory } from './posn.js';
-// import { GAMEBOARD_MAX_X, GAMEBOARD_MAX_Y } from './main.js';
+import { playerFactory } from '../src/player.js';
+import { posnFactory } from '../src/posn.js';
 
 describe('Player testing', () => {  
 

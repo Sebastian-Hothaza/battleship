@@ -1,4 +1,4 @@
-import { posnFactory } from "./posn";
+import { posnFactory } from "../src/posn";
 
 describe('Posn testing', () => {
   test('create a posn', () =>{

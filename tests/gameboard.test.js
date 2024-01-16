@@ -1,5 +1,5 @@
-import { gameboardFactory } from './gameboard.js';
-import { posnFactory } from './posn.js';
+import { gameboardFactory } from '../src/gameboard.js';
+import { posnFactory } from '../src/posn.js';
 
 describe('Ship testing', () => {
     
