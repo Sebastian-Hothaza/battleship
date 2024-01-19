@@ -1,2 +1,2 @@
 # battleship
-TOP Battleship project designed with TDD
+Classic battleship game featuring intelligent AI attacks. Test Driven Development featuring the Jest testing framework.
